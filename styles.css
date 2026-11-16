@@ -644,3 +644,474 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   ENHANCED NETFLIX EXPERIENCE (Search, Modals, Toasts, Responsive)
+   ========================================================================== */
+
+/* Navbar Search Box */
+.search-box {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 4px 10px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.search-box:focus-within {
+  border-color: #fff;
+  background: rgba(0, 0, 0, 0.95);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.search-icon {
+  font-size: 15px;
+  color: #fff;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+  width: 180px;
+  transition: width 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: #8c8c8c;
+}
+
+.search-clear {
+  font-size: 14px;
+  color: #aaa;
+  cursor: pointer;
+  display: none;
+  margin-left: 6px;
+}
+
+.search-clear.active {
+  display: inline-block;
+}
+
+.search-clear:hover {
+  color: #fff;
+}
+
+/* Nav Badge for My List */
+.nav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e50914;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: 4px;
+}
+
+.nav-icon-wrap {
+  position: relative;
+  cursor: pointer;
+}
+
+.bell-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 7px;
+  height: 7px;
+  background: #e50914;
+  border-radius: 50%;
+}
+
+/* Hero Section Enhancements */
+.hero {
+  position: relative;
+  height: 85vh;
+  min-height: 520px;
+  background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(20, 20, 20, 0.85) 85%,
+      #141414 100%
+    ),
+    url("Money-Heist.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  margin-bottom: 20px;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #e5e5e5;
+  margin-bottom: 14px;
+}
+
+.hero-badge .n-logo {
+  color: #e50914;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.hero-title {
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 900;
+  text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.8);
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.hero-match {
+  color: #46d369;
+  font-weight: 700;
+}
+
+.hero-year, .hero-duration {
+  color: #a3a3a3;
+}
+
+.hero-maturity, .hero-quality {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 1px 6px;
+  font-size: 11px;
+  border-radius: 2px;
+}
+
+.btn-list {
+  background: rgba(109, 109, 110, 0.7);
+  color: #fff;
+}
+
+.btn-list:hover {
+  background: rgba(109, 109, 110, 0.4);
+}
+
+.btn-list.in-list {
+  background: rgba(70, 211, 105, 0.25);
+  border: 1px solid #46d369;
+  color: #46d369;
+}
+
+/* Card Overlay Details */
+.overlay-match {
+  color: #46d369;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.overlay-genre {
+  font-size: 11px;
+  color: #a3a3a3;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.control-btn.in-list {
+  border-color: #46d369;
+  color: #46d369;
+  background: rgba(70, 211, 105, 0.2);
+}
+
+.control-btn.liked {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.2);
+}
+
+/* Modal Core Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
+}
+
+.modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-container {
+  position: relative;
+  background: #181818;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+  z-index: 10;
+  width: 90%;
+  max-width: 860px;
+  transform: scale(0.92);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal.active .modal-container {
+  transform: scale(1);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: #fff;
+  color: #000;
+  transform: scale(1.08);
+}
+
+/* Video Player Modal Specifics */
+.trailer-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #282828;
+}
+
+.trailer-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  background: #000;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* More Info Modal Specifics */
+.info-hero {
+  position: relative;
+  height: 340px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 30px;
+}
+
+.info-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    #181818 0%,
+    rgba(24, 24, 24, 0.6) 60%,
+    rgba(24, 24, 24, 0.2) 100%
+  );
+}
+
+.info-hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.info-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.info-hero-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.info-body {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 30px;
+  padding: 24px 30px 32px;
+}
+
+.info-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.info-match {
+  color: #46d369;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.info-year, .info-duration {
+  color: #bcbcbc;
+  font-size: 14px;
+}
+
+.info-synopsis {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #e5e5e5;
+}
+
+.info-tags {
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #777;
+}
+
+.tag-label {
+  color: #777;
+}
+
+.tag-value {
+  color: #ddd;
+}
+
+/* Toast Notifications */
+.netflix-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
+  z-index: 3000;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.netflix-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.netflix-toast i {
+  color: #e50914;
+  font-size: 16px;
+}
+
+/* Search Grid */
+.search-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  overflow-x: visible;
+  padding-bottom: 20px;
+}
+
+.search-grid .content-card {
+  min-width: unset;
+  width: 100%;
+  height: 145px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 16px 20px;
+  }
+  .navbar-nav {
+    display: none;
+  }
+  .hero {
+    padding: 0 20px;
+    height: 70vh;
+  }
+  .hero-title {
+    font-size: 32px;
+  }
+  .search-input {
+    width: 120px;
+  }
+  .info-body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

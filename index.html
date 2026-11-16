@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Netflix Clone</title>
+    <title>Netflix — Watch TV Shows Online, Watch Movies Online</title>
+    <link rel="icon" href="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico" />
     <link rel="stylesheet" href="styles.css" />
     <link
       rel="stylesheet"
@@ -12,791 +13,982 @@
     />
   </head>
   <body>
-    <nav class="navbar">
+    <!-- Toast Notification Container -->
+    <div id="netflix-toast" class="netflix-toast" aria-live="polite"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
       <div class="navbar-brand">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
-          alt="Netflix logo"
-          class="logo"
-        />
+        <a href="#hero">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+            alt="Netflix logo"
+            class="logo"
+          />
+        </a>
       </div>
       <div class="navbar-nav">
-        <a href="#" class="nav-link">Home</a>
-        <a href="#" class="nav-link">Tv Shows</a>
-        <a href="#" class="nav-link">Movies</a>
-        <a href="#" class="nav-link">New & Popular</a>
-        <a href="#" class="nav-link">My Lists</a>
+        <a href="#hero" class="nav-link active">Home</a>
+        <a href="#top-rated" class="nav-link">TV Shows</a>
+        <a href="#blockbusters" class="nav-link">Movies</a>
+        <a href="#trending-now" class="nav-link">New & Popular</a>
+        <a href="#my-list-section" class="nav-link" id="nav-my-list">My List <span id="nav-list-badge" class="nav-badge">0</span></a>
       </div>
       <div class="navbar-right">
-        <i class="fas fa-search"></i>
-        <i class="fas fa-bell"></i>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"
-          alt="User profile avatar"
-          class="profile-icon"
-        />
+        <!-- Search Bar -->
+        <div class="search-box" id="search-box">
+          <i class="fas fa-search search-icon" id="search-toggle-btn" title="Search titles"></i>
+          <input
+            type="text"
+            id="search-input"
+            class="search-input"
+            placeholder="Titles, people, genres..."
+            autocomplete="off"
+          />
+          <i class="fas fa-times search-clear" id="search-clear-btn" title="Clear search"></i>
+        </div>
+        <div class="nav-icon-wrap" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="bell-dot"></span>
+        </div>
+        <a href="profile-details.html" title="Account & Settings">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"
+            alt="User profile avatar"
+            class="profile-icon"
+          />
+        </a>
       </div>
     </nav>
 
-    <header class="hero">
+    <!-- Hero Billboard Section -->
+    <header class="hero" id="hero">
+      <div class="hero-overlay"></div>
       <div class="hero-content">
+        <div class="hero-badge"><span class="n-logo">N</span> SERIES</div>
         <h1 class="hero-title">Money Heist</h1>
+        <div class="hero-meta">
+          <span class="hero-match">99% Match</span>
+          <span class="hero-year">2021</span>
+          <span class="hero-maturity">TV-MA</span>
+          <span class="hero-duration">5 Seasons</span>
+          <span class="hero-quality">4K Ultra HD</span>
+        </div>
         <p class="hero-description">
-          A criminal mastermind leads eight thieves in a daring heist on Spain’s
-          Royal Mint, sparking a tense standoff filled with strategy, secrets,
-          and rebellion.
+          A criminal mastermind leads eight thieves in a daring heist on Spain's
+          Royal Mint, printing 2.4 billion euros while sparking a high-stakes standoff
+          filled with psychological chess, resistance, and revolution.
         </p>
-        <div class="hero-button">
-          <button class="btn btn-play"><i class="fa fa-play"></i>Play</button>
-          <button class="btn btn-more-info">
-            <i class="fa fa-info-circle"></i>More info
+        <div class="hero-buttons">
+          <button class="btn btn-play" id="hero-play-btn" data-trailer="_InqQJRqGW4" data-title="Money Heist">
+            <i class="fas fa-play"></i> Play
+          </button>
+          <button class="btn btn-more-info" id="hero-info-btn">
+            <i class="fas fa-info-circle"></i> More Info
+          </button>
+          <button class="btn btn-list" id="hero-list-btn" data-id="money-heist" title="Add to My List">
+            <i class="fas fa-plus"></i> My List
           </button>
         </div>
       </div>
     </header>
 
-    <main>
+    <!-- Main Content Container -->
+    <main class="main-content">
       <div class="container">
-        <section class="content-section">
-          <h2 class="section-title">Netflix Originals</h2>
-          <div class="content-row">
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
+        <!-- Search Results Row (Visible only during search) -->
+        <section id="search-results-section" class="content-section" style="display: none;">
+          <h2 class="section-title">Search Results (<span id="search-count">0</span>)</h2>
+          <div class="content-row search-grid" id="search-results-row"></div>
+        </section>
 
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
-
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
-
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
-
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
-
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <!-- Dynamic My List Section -->
+        <section id="my-list-section" class="content-section" style="display: none;">
+          <h2 class="section-title">My List <span id="my-list-count" class="section-count">(0)</span></h2>
+          <div class="content-row" id="my-list-row">
+            <!-- Dynamically populated from localStorage -->
           </div>
         </section>
-      </div>
 
-      <div class="container">
-        <section class="content-section">
+        <!-- All Categorized Rows -->
+        <section id="trending-now" class="content-section">
           <h2 class="section-title">Trending Now</h2>
           <div class="content-row">
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="money-heist" 
+                 data-title="Money Heist" 
+                 data-poster="Money-Heist.jpg" 
+                 data-rating="99% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="5 Seasons" 
+                 data-genre="Suspense • Heist • Spanish" 
+                 data-year="2021" 
+                 data-trailer="_InqQJRqGW4" 
+                 data-desc="A criminal mastermind who goes by 'The Professor' plans the biggest heist in recorded history: to print billions of euros in the Royal Mint of Spain.">
+              <img src="Money-Heist.jpg" alt="Money Heist poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">99% Match</span>
                 </div>
                 <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
+                  <div class="overlay-title">Money Heist</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">5 Seasons</span>
+                    <span class="info-badge">HD</span>
                   </div>
+                  <div class="overlay-genre">Suspense • Heist • Spanish</div>
                 </div>
               </div>
             </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="stranger-things" 
+                 data-title="Stranger Things" 
+                 data-poster="posters/stranger-things.jpg" 
+                 data-rating="98% Match" 
+                 data-maturity="TV-14" 
+                 data-duration="4 Seasons" 
+                 data-genre="Sci-Fi • Horror • Nostalgia" 
+                 data-year="2022" 
+                 data-trailer="b9EkMc79ZSU" 
+                 data-desc="When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.">
+              <img src="posters/stranger-things.jpg" alt="Stranger Things poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">98% Match</span>
                 </div>
                 <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
+                  <div class="overlay-title">Stranger Things</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">TV-14</span>
+                    <span class="info-badge">4 Seasons</span>
+                    <span class="info-badge">HD</span>
                   </div>
+                  <div class="overlay-genre">Sci-Fi • Horror • Nostalgia</div>
                 </div>
               </div>
             </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="interstellar" 
+                 data-title="Interstellar" 
+                 data-poster="posters/interstellar.jpg" 
+                 data-rating="97% Match" 
+                 data-maturity="PG-13" 
+                 data-duration="2h 49m" 
+                 data-genre="Sci-Fi • Space • Emotional" 
+                 data-year="2014" 
+                 data-trailer="zSWdZVtXT7E" 
+                 data-desc="When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecraft, along with a team of researchers, to find a new planet for humans.">
+              <img src="posters/interstellar.jpg" alt="Interstellar poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">97% Match</span>
                 </div>
                 <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
+                  <div class="overlay-title">Interstellar</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">PG-13</span>
+                    <span class="info-badge">2h 49m</span>
+                    <span class="info-badge">HD</span>
                   </div>
+                  <div class="overlay-genre">Sci-Fi • Space • Emotional</div>
                 </div>
               </div>
             </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="squid-game" 
+                 data-title="Squid Game" 
+                 data-poster="posters/squid-game.jpg" 
+                 data-rating="99% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="2 Seasons" 
+                 data-genre="Korean • Thriller • Drama" 
+                 data-year="2021" 
+                 data-trailer="oqxAJKy0ii4" 
+                 data-desc="Hundreds of cash-strapped players accept a strange invitation to compete in children's games. Inside, a tempting prize awaits with deadly high stakes.">
+              <img src="posters/squid-game.jpg" alt="Squid Game poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">99% Match</span>
                 </div>
                 <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
+                  <div class="overlay-title">Squid Game</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">2 Seasons</span>
+                    <span class="info-badge">HD</span>
                   </div>
+                  <div class="overlay-genre">Korean • Thriller • Drama</div>
                 </div>
               </div>
             </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="inception" 
+                 data-title="Inception" 
+                 data-poster="posters/inception.jpg" 
+                 data-rating="98% Match" 
+                 data-maturity="PG-13" 
+                 data-duration="2h 28m" 
+                 data-genre="Action • Sci-Fi • Mind-Bending" 
+                 data-year="2010" 
+                 data-trailer="YoHD9XEInc0" 
+                 data-desc="A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.">
+              <img src="posters/inception.jpg" alt="Inception poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">98% Match</span>
                 </div>
                 <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
+                  <div class="overlay-title">Inception</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">PG-13</span>
+                    <span class="info-badge">2h 28m</span>
+                    <span class="info-badge">HD</span>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <div class="container">
-        <section class="content-section">
-          <h2 class="section-title">Popular on Netflix</h2>
-          <div class="content-row">
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
-
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
-
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
-
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
-
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
-              <div class="netflix-badge">N</div>
-
-              <div class="card-overlay">
-                <div class="overlay-top">
-                  <div class="netflix-badge">N</div>
-                </div>
-                <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
-                  <div class="overlay-controls">
-                    <button class="control-btn play-btn">
-                      <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="control-btn thumbs-btn">
-                      <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <button class="control-btn more-btn">
-                      <i class="fas fa-chevron-down"></i>
-                    </button>
-                  </div>
-                  <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
-                  </div>
+                  <div class="overlay-genre">Action • Sci-Fi • Mind-Bending</div>
                 </div>
               </div>
             </div>
           </div>
         </section>
-      </div>
 
-      <div class="container">
-        <section class="content-section">
-          <h2 class="section-title">Top 10 in India Today</h2>
+        <section id="netflix-originals" class="content-section">
+          <h2 class="section-title">Netflix Originals</h2>
           <div class="content-row">
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="peaky-blinders" 
+                 data-title="Peaky Blinders" 
+                 data-poster="Peaky-Blinders.webp" 
+                 data-rating="98% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="6 Seasons" 
+                 data-genre="Period Piece • Crime • Drama" 
+                 data-year="2022" 
+                 data-trailer="oVzVdvGIC7U" 
+                 data-desc="A notorious gang in 1919 Birmingham, England, is led by the fierce Tommy Shelby, a crime boss set on moving up in the world no matter the cost.">
+              <img src="Peaky-Blinders.webp" alt="Peaky Blinders poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">98% Match</span>
                 </div>
                 <div class="overlay-bottom">
                   <div class="overlay-title">Peaky Blinders</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">6 Seasons</span>
+                    <span class="info-badge">HD</span>
                   </div>
+                  <div class="overlay-genre">Period Piece • Crime • Drama</div>
                 </div>
               </div>
             </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="dark" 
+                 data-title="Dark" 
+                 data-poster="posters/dark.jpg" 
+                 data-rating="97% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="3 Seasons" 
+                 data-genre="Sci-Fi • Mind-Bending • Mystery" 
+                 data-year="2020" 
+                 data-trailer="rrwycJ08PSA" 
+                 data-desc="A missing child sets four families on a frantic hunt for answers as they unearth a mind-bending mystery that spans three generations.">
+              <img src="posters/dark.jpg" alt="Dark poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">97% Match</span>
                 </div>
                 <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
+                  <div class="overlay-title">Dark</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">3 Seasons</span>
+                    <span class="info-badge">HD</span>
                   </div>
+                  <div class="overlay-genre">Sci-Fi • Mind-Bending • Mystery</div>
                 </div>
               </div>
             </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="the-witcher" 
+                 data-title="The Witcher" 
+                 data-poster="posters/the-witcher.jpg" 
+                 data-rating="95% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="3 Seasons" 
+                 data-genre="Fantasy • Action • Adventure" 
+                 data-year="2023" 
+                 data-trailer="ndl1W4ltcmg" 
+                 data-desc="Geralt of Rivia, a solitary monster hunter, struggles to find his place in a world where people often prove more wicked than beasts.">
+              <img src="posters/the-witcher.jpg" alt="The Witcher poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">95% Match</span>
                 </div>
                 <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
+                  <div class="overlay-title">The Witcher</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">3 Seasons</span>
+                    <span class="info-badge">HD</span>
                   </div>
+                  <div class="overlay-genre">Fantasy • Action • Adventure</div>
                 </div>
               </div>
             </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="wednesday" 
+                 data-title="Wednesday" 
+                 data-poster="posters/wednesday.jpg" 
+                 data-rating="98% Match" 
+                 data-maturity="TV-14" 
+                 data-duration="1 Season" 
+                 data-genre="Comedy • Mystery • Fantasy" 
+                 data-year="2022" 
+                 data-trailer="Di310BC8UrU" 
+                 data-desc="While attending Nevermore Academy, Wednesday Addams attempts to master her emerging psychic ability, thwart a monstrous killing spree and solve the supernatural mystery.">
+              <img src="posters/wednesday.jpg" alt="Wednesday poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">98% Match</span>
                 </div>
                 <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
+                  <div class="overlay-title">Wednesday</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">TV-14</span>
+                    <span class="info-badge">1 Season</span>
+                    <span class="info-badge">HD</span>
                   </div>
+                  <div class="overlay-genre">Comedy • Mystery • Fantasy</div>
                 </div>
               </div>
             </div>
-
-            <div class="content-card">
-              <img
-                src="Peaky-Blinders.webp"
-                alt="Peaky Blinders movie poster"
-              />
+            <div class="content-card" 
+                 data-id="queens-gambit" 
+                 data-title="The Queen's Gambit" 
+                 data-poster="posters/queens-gambit.jpg" 
+                 data-rating="98% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="Limited Series" 
+                 data-genre="Drama • Period • Psychological" 
+                 data-year="2020" 
+                 data-trailer="oZn3qSgmLqI" 
+                 data-desc="Orphaned at the tender age of nine, prodigious introvert Beth Harmon discovers and masters the game of chess in 1960s USA.">
+              <img src="posters/queens-gambit.jpg" alt="The Queen's Gambit poster" loading="lazy" />
               <div class="netflix-badge">N</div>
-
               <div class="card-overlay">
                 <div class="overlay-top">
                   <div class="netflix-badge">N</div>
+                  <span class="overlay-match">98% Match</span>
                 </div>
                 <div class="overlay-bottom">
-                  <div class="overlay-title">Peaky Blinders</div>
+                  <div class="overlay-title">The Queen's Gambit</div>
                   <div class="overlay-controls">
-                    <button class="control-btn play-btn">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn check-btn">
-                      <i class="fas fa-check"></i>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
                     </button>
-                    <button class="control-btn thumbs-btn">
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
                       <i class="fas fa-thumbs-up"></i>
                     </button>
-                    <button class="control-btn more-btn">
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
                       <i class="fas fa-chevron-down"></i>
                     </button>
                   </div>
                   <div class="overlay-info">
-                    <div class="info-badge">TV-MA</div>
-                    <div class="info-badge">Limited Series</div>
-                    <div class="info-badge">HD</div>
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">Limited Series</span>
+                    <span class="info-badge">HD</span>
                   </div>
+                  <div class="overlay-genre">Drama • Period • Psychological</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="top-rated" class="content-section">
+          <h2 class="section-title">Critically Acclaimed TV Shows</h2>
+          <div class="content-row">
+            <div class="content-card" 
+                 data-id="breaking-bad" 
+                 data-title="Breaking Bad" 
+                 data-poster="posters/breaking-bad.jpg" 
+                 data-rating="99% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="5 Seasons" 
+                 data-genre="Crime • Drama • Thriller" 
+                 data-year="2013" 
+                 data-trailer="HhesaQXLuRY" 
+                 data-desc="A chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine with a former student in order to secure his family's future.">
+              <img src="posters/breaking-bad.jpg" alt="Breaking Bad poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">99% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">Breaking Bad</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">5 Seasons</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Crime • Drama • Thriller</div>
+                </div>
+              </div>
+            </div>
+            <div class="content-card" 
+                 data-id="better-call-saul" 
+                 data-title="Better Call Saul" 
+                 data-poster="posters/better-call-saul.jpg" 
+                 data-rating="98% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="6 Seasons" 
+                 data-genre="Legal • Crime • Dark Comedy" 
+                 data-year="2022" 
+                 data-trailer="HN4oyhmgopA" 
+                 data-desc="The trials and tribulations of criminal lawyer Jimmy McGill in the years leading up to his fateful run-in with Walter White and Jesse Pinkman.">
+              <img src="posters/better-call-saul.jpg" alt="Better Call Saul poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">98% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">Better Call Saul</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">6 Seasons</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Legal • Crime • Dark Comedy</div>
+                </div>
+              </div>
+            </div>
+            <div class="content-card" 
+                 data-id="arcane" 
+                 data-title="Arcane: League of Legends" 
+                 data-poster="posters/arcane.jpg" 
+                 data-rating="99% Match" 
+                 data-maturity="TV-14" 
+                 data-duration="2 Seasons" 
+                 data-genre="Animation • Action • Sci-Fi" 
+                 data-year="2024" 
+                 data-trailer="fXmAurh012s" 
+                 data-desc="Set in utopian Piltover and the oppressed underground of Zaun, the story follows the origins of two iconic League champions-and the power that will tear them apart.">
+              <img src="posters/arcane.jpg" alt="Arcane: League of Legends poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">99% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">Arcane: League of Legends</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">TV-14</span>
+                    <span class="info-badge">2 Seasons</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Animation • Action • Sci-Fi</div>
+                </div>
+              </div>
+            </div>
+            <div class="content-card" 
+                 data-id="cyberpunk" 
+                 data-title="Cyberpunk: Edgerunners" 
+                 data-poster="posters/cyberpunk.jpg" 
+                 data-rating="96% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="1 Season" 
+                 data-genre="Anime • Action • Cyberpunk" 
+                 data-year="2022" 
+                 data-trailer="JtqIas3bYhg" 
+                 data-desc="A street kid trying to survive in a technology and body modification-obsessed city of the future. Having everything to lose, he chooses to stay alive by becoming an edgerunner.">
+              <img src="posters/cyberpunk.jpg" alt="Cyberpunk: Edgerunners poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">96% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">Cyberpunk: Edgerunners</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">1 Season</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Anime • Action • Cyberpunk</div>
+                </div>
+              </div>
+            </div>
+            <div class="content-card" 
+                 data-id="black-mirror" 
+                 data-title="Black Mirror" 
+                 data-poster="posters/black-mirror.jpg" 
+                 data-rating="95% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="6 Seasons" 
+                 data-genre="Dystopian • Anthology • Tech" 
+                 data-year="2023" 
+                 data-trailer="V0UUPQe0rLQ" 
+                 data-desc="An anthology series exploring a twisted, high-tech multiverse where humanity's greatest innovations and darkest instincts collide.">
+              <img src="posters/black-mirror.jpg" alt="Black Mirror poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">95% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">Black Mirror</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">6 Seasons</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Dystopian • Anthology • Tech</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="blockbusters" class="content-section">
+          <h2 class="section-title">Action Thrillers & Drama</h2>
+          <div class="content-row">
+            <div class="content-card" 
+                 data-id="oppenheimer" 
+                 data-title="Oppenheimer" 
+                 data-poster="posters/oppenheimer.jpg" 
+                 data-rating="97% Match" 
+                 data-maturity="R" 
+                 data-duration="3h 0m" 
+                 data-genre="Biography • Drama • History" 
+                 data-year="2023" 
+                 data-trailer="uYPbbksJxIg" 
+                 data-desc="The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II.">
+              <img src="posters/oppenheimer.jpg" alt="Oppenheimer poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">97% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">Oppenheimer</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">R</span>
+                    <span class="info-badge">3h 0m</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Biography • Drama • History</div>
+                </div>
+              </div>
+            </div>
+            <div class="content-card" 
+                 data-id="narcos" 
+                 data-title="Narcos" 
+                 data-poster="posters/narcos.jpg" 
+                 data-rating="96% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="3 Seasons" 
+                 data-genre="Biographical • Crime • Drama" 
+                 data-year="2017" 
+                 data-trailer="xl8hmgftQB4" 
+                 data-desc="A chronicled look at the criminal exploits of Colombian drug lord Pablo Escobar, as well as the many other drug kingpins who plagued the country through the years.">
+              <img src="posters/narcos.jpg" alt="Narcos poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">96% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">Narcos</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">3 Seasons</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Biographical • Crime • Drama</div>
+                </div>
+              </div>
+            </div>
+            <div class="content-card" 
+                 data-id="mindhunter" 
+                 data-title="Mindhunter" 
+                 data-poster="posters/mindhunter.jpg" 
+                 data-rating="96% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="2 Seasons" 
+                 data-genre="Psychological • Crime • Mystery" 
+                 data-year="2019" 
+                 data-trailer="7gZCfRD_zWE" 
+                 data-desc="In the late 1970s, two FBI agents expand criminal science by delving into the psychology of murder and awkwardly getting too close to all-too-real monsters.">
+              <img src="posters/mindhunter.jpg" alt="Mindhunter poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">96% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">Mindhunter</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">2 Seasons</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Psychological • Crime • Mystery</div>
+                </div>
+              </div>
+            </div>
+            <div class="content-card" 
+                 data-id="cobra-kai" 
+                 data-title="Cobra Kai" 
+                 data-poster="posters/cobra-kai.jpg" 
+                 data-rating="93% Match" 
+                 data-maturity="TV-14" 
+                 data-duration="6 Seasons" 
+                 data-genre="Martial Arts • Comedy • Drama" 
+                 data-year="2024" 
+                 data-trailer="sUR9x3_QpTU" 
+                 data-desc="Decades after their 1984 All Valley Karate Tournament bout, a middle-aged Daniel LaRusso and Johnny Lawrence find themselves martial-arts rivals again.">
+              <img src="posters/cobra-kai.jpg" alt="Cobra Kai poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">93% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">Cobra Kai</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">TV-14</span>
+                    <span class="info-badge">6 Seasons</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Martial Arts • Comedy • Drama</div>
+                </div>
+              </div>
+            </div>
+            <div class="content-card" 
+                 data-id="the-crown" 
+                 data-title="The Crown" 
+                 data-poster="posters/the-crown.jpg" 
+                 data-rating="95% Match" 
+                 data-maturity="TV-MA" 
+                 data-duration="6 Seasons" 
+                 data-genre="Historical • Royalty • Drama" 
+                 data-year="2023" 
+                 data-trailer="JWtnJGOQRPU" 
+                 data-desc="Follows the political rivalries and romance of Queen Elizabeth II's reign and the events that shaped the second half of the twentieth century.">
+              <img src="posters/the-crown.jpg" alt="The Crown poster" loading="lazy" />
+              <div class="netflix-badge">N</div>
+              <div class="card-overlay">
+                <div class="overlay-top">
+                  <div class="netflix-badge">N</div>
+                  <span class="overlay-match">95% Match</span>
+                </div>
+                <div class="overlay-bottom">
+                  <div class="overlay-title">The Crown</div>
+                  <div class="overlay-controls">
+                    <button class="control-btn play-btn" title="Play Trailer" data-action="play">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn mylist-btn" title="Add to My List" data-action="mylist">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn like-btn" title="I like this" data-action="like">
+                      <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="control-btn more-btn" title="More Info" data-action="info">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="overlay-info">
+                    <span class="info-badge">TV-MA</span>
+                    <span class="info-badge">6 Seasons</span>
+                    <span class="info-badge">HD</span>
+                  </div>
+                  <div class="overlay-genre">Historical • Royalty • Drama</div>
                 </div>
               </div>
             </div>
@@ -805,53 +997,120 @@
       </div>
     </main>
 
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-top">
-          <div class="social-links">
-            <a href="#" class="social-link"
-              ><i class="fab fa-facebook-f"></i
-            ></a>
-            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+    <!-- Video Player Modal -->
+    <div id="trailer-modal" class="modal trailer-modal" aria-hidden="true" role="dialog">
+      <div class="modal-backdrop"></div>
+      <div class="modal-container trailer-container">
+        <button class="modal-close-btn" id="modal-close-btn" aria-label="Close trailer">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="trailer-header">
+          <h3 id="trailer-title" class="trailer-title">Trailer</h3>
+        </div>
+        <div class="video-wrapper">
+          <iframe
+            id="trailer-iframe"
+            src=""
+            title="Movie Trailer"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- More Info Detail Modal -->
+    <div id="info-modal" class="modal info-modal" aria-hidden="true" role="dialog">
+      <div class="modal-backdrop"></div>
+      <div class="modal-container info-container">
+        <button class="modal-close-btn" id="info-close-btn" aria-label="Close info">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="info-hero" id="info-hero">
+          <div class="info-hero-overlay"></div>
+          <div class="info-hero-content">
+            <h2 id="info-title" class="info-title">Title</h2>
+            <div class="info-hero-actions">
+              <button class="btn btn-play" id="info-play-btn">
+                <i class="fas fa-play"></i> Play
+              </button>
+              <button class="control-btn mylist-btn" id="info-list-btn" title="Add to My List">
+                <i class="fas fa-plus"></i>
+              </button>
+              <button class="control-btn like-btn" id="info-like-btn" title="I like this">
+                <i class="fas fa-thumbs-up"></i>
+              </button>
+            </div>
           </div>
         </div>
+        <div class="info-body">
+          <div class="info-left">
+            <div class="info-meta-row">
+              <span id="info-rating" class="info-match">98% Match</span>
+              <span id="info-year" class="info-year">2024</span>
+              <span id="info-maturity" class="info-badge">TV-MA</span>
+              <span id="info-duration" class="info-duration">2h 15m</span>
+              <span class="info-badge">HD</span>
+            </div>
+            <p id="info-desc" class="info-synopsis">Movie description here...</p>
+          </div>
+          <div class="info-right">
+            <div class="info-tags">
+              <p><span class="tag-label">Genres:</span> <span id="info-genre" class="tag-value">Sci-Fi, Drama</span></p>
+              <p><span class="tag-label">Audio:</span> <span class="tag-value">English [Original], Spanish, Hindi</span></p>
+              <p><span class="tag-label">Subtitles:</span> <span class="tag-value">English, Spanish, French, German</span></p>
+              <p><span class="tag-label">Available in:</span> <span class="tag-value">4K Ultra HD • Dolby Atmos</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-top">
+          <div class="social-links">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
         <div class="footer-links">
           <div class="footer-column">
             <ul>
-              <li><a href="#">Audio Description</a></li>
-              <li><a href="#">Investor Relations</a></li>
-              <li><a href="#">Legal Notices</a></li>
+              <li><a href="#hero">Audio Description</a></li>
+              <li><a href="#hero">Investor Relations</a></li>
+              <li><a href="#hero">Legal Notices</a></li>
             </ul>
           </div>
           <div class="footer-column">
             <ul>
-              <li><a href="#">Help Center</a></li>
-              <li><a href="#">Jobs</a></li>
-              <li><a href="#">Cookie Preferences</a></li>
+              <li><a href="#hero">Help Centre</a></li>
+              <li><a href="#hero">Jobs</a></li>
+              <li><a href="#hero">Cookie Preferences</a></li>
             </ul>
           </div>
           <div class="footer-column">
             <ul>
-              <li><a href="#">Gift Cards</a></li>
-              <li><a href="#">Terms of Use</a></li>
-              <li><a href="#">Corporate Information</a></li>
+              <li><a href="#hero">Gift Cards</a></li>
+              <li><a href="#hero">Terms of Use</a></li>
+              <li><a href="#hero">Corporate Information</a></li>
             </ul>
           </div>
           <div class="footer-column">
             <ul>
-              <li><a href="#">Media Center</a></li>
-              <li><a href="#">Privacy</a></li>
-              <li><a href="#">Contact Us</a></li>
+              <li><a href="#hero">Media Centre</a></li>
+              <li><a href="#hero">Privacy</a></li>
+              <li><a href="#hero">Contact Us</a></li>
             </ul>
           </div>
         </div>
-
         <div class="footer-bottom">
           <button class="service-code">Service Code</button>
-          <p class="copyright">© 1997-2025 Netflix, Inc.</p>
+          <p class="copyright">&copy; 1997-2026 Netflix, Inc. Engineered by Meet Chauhan.</p>
         </div>
       </div>
     </footer>

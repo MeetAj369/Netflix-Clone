@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Netflix Profile Details</title>
+    <title>Netflix Profile & Account Details</title>
+    <link rel="icon" href="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="profile-details.css" />
     <link
@@ -12,24 +13,24 @@
     />
   </head>
   <body class="profile-details-page">
-    <nav class="navbar">
+    <nav class="navbar scrolled">
       <div class="navbar-brand">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
-          alt="Netflix logo"
-          class="logo"
-        />
+        <a href="index.html" title="Back to Netflix Home">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+            alt="Netflix logo"
+            class="logo"
+          />
+        </a>
       </div>
       <div class="navbar-nav">
-        <a href="#" class="nav-link">Home</a>
-        <a href="#" class="nav-link">Tv Shows</a>
-        <a href="#" class="nav-link">Movies</a>
-        <a href="#" class="nav-link">New & Popular</a>
-        <a href="#" class="nav-link">My Lists</a>
+        <a href="index.html" class="nav-link"><i class="fas fa-arrow-left"></i> Back to Browse</a>
+        <a href="index.html#top-rated" class="nav-link">TV Shows</a>
+        <a href="index.html#blockbusters" class="nav-link">Movies</a>
+        <a href="index.html#my-list-section" class="nav-link">My List</a>
       </div>
       <div class="navbar-right">
-        <i class="fas fa-search"></i>
-        <i class="fas fa-bell"></i>
+        <a href="index.html" class="nav-link" style="font-weight: 600;">Done</a>
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"
           alt="User profile avatar"
@@ -47,47 +48,56 @@
           />
         </div>
         <div class="profile-info">
-          <h1 class="profile-name">Meet AJ</h1>
-          <p class="profile-email">meetaj@gmail.com</p>
+          <h1 class="profile-name">Meet Chauhan</h1>
+          <p class="profile-email">meetaj369@gmail.com</p>
           <div class="membership-info">
-            <span class="membership-badge">Premium</span>
-            <span class="membership-details">4K + HDR</span>
+            <span class="membership-badge">Premium Ultra HD</span>
+            <span class="membership-details">4K + HDR • Spatial Audio • 4 Screens</span>
           </div>
         </div>
       </div>
 
       <div class="profile-sections">
         <section class="profile-section">
-          <h2>Account Settings</h2>
+          <h2>Account & Membership Settings</h2>
           <div class="setting-grid">
             <div class="setting-item">
               <div class="setting-header">
                 <h3>Membership & Billing</h3>
-                <button class="btn-change">Change Plan</button>
+                <button class="btn-change" onclick="alert('Plan is currently active: Premium Ultra HD (₹649/mo). All 4 screens enabled.')">Change Plan</button>
               </div>
-              <p class="setting-details">Premium Plan-199/month</p>
-              <p class="setting-details">Next Billing date-July 05, 2025</p>
+              <p class="setting-details">Premium Plan — 4K + HDR + Spatial Audio</p>
+              <p class="setting-details">Next billing date: Active (Auto-Renew)</p>
+              <p class="setting-details" style="color: #46d369; margin-top: 6px;"><i class="fas fa-check-circle"></i> Member since 2024</p>
             </div>
 
             <div class="setting-item">
               <div class="setting-header">
-                <h3>Profile and Parental control</h3>
-                <button class="btn-change">Manage</button>
+                <h3>Profile & Parental Controls</h3>
+                <button class="btn-change" onclick="alert('All maturity ratings are unlocked for Meet Chauhan.')">Manage</button>
               </div>
-              <p class="setting-details">Profile-1</p>
-              <p class="setting-details">All maturity rating</p>
+              <p class="setting-details">Primary Profile: Meet Chauhan</p>
+              <p class="setting-details">Maturity Rating: All Maturity Ratings (TV-MA / R)</p>
+              <p class="setting-details">Autoplay next episode: ON</p>
             </div>
 
             <div class="setting-item">
               <div class="setting-header">
-                <h3>Privacy & Security</h3>
-                <button class="btn-change">Change Password</button>
+                <h3>Privacy, Security & Devices</h3>
+                <button class="btn-change" onclick="alert('Two-factor authentication is active on meetaj369@gmail.com.')">Security</button>
               </div>
-              <p class="setting-details">Password: ************</p>
-              <p class="setting-details">Two-factor authentication</p>
+              <p class="setting-details">Registered Email: meetaj369@gmail.com</p>
+              <p class="setting-details">Password: ••••••••••••</p>
+              <p class="setting-details">Two-Factor Authentication: Enabled</p>
             </div>
           </div>
         </section>
+
+        <div style="margin-top: 40px; text-align: center;">
+          <a href="index.html" class="btn btn-play" style="display: inline-flex; text-decoration: none; padding: 12px 32px; font-size: 16px;">
+            <i class="fas fa-arrow-left"></i> Return to Netflix Browse
+          </a>
+        </div>
       </div>
     </div>
   </body>
